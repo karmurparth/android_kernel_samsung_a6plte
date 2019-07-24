@@ -985,6 +985,20 @@ config CMDLINE_FORCE
 	  command-line options your boot loader passes to the kernel.
 endchoice
 
+config CMDLINE_REARRANGE
+	bool "Command line rearranging"
+	help
+	  This options allows overriding bootloader arguments.
+	  Input command line: args... <keyword> overriden-args...
+          Rearranged command line: overriden-args... args...
+
+config CMDLINE_REARRANGE_KEYWORD
+	string "Keyword to split command line"
+	default "overrides"
+	depends on CMDLINE_REARRANGE
+	help
+	  Keyword to split command line.
+
 config EFI_STUB
 	bool
 

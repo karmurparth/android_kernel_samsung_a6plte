@@ -935,6 +935,9 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 	int l = 0;
 	const char *p = NULL;
 	char *cmdline = data;
+#ifdef CONFIG_CMDLINE_REARRANGE
+	char *override_pos;
+#endif
 
 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
 
@@ -966,6 +969,32 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 			strlcpy(cmdline, p, min((int)l, COMMAND_LINE_SIZE));
 		}
 	}
+
+#ifdef CONFIG_CMDLINE_REARRANGE
+	override_pos = strstr(cmdline, CONFIG_CMDLINE_REARRANGE_KEYWORD);
+
+	if (override_pos) {
+		int override_len;
+		char tmp[1024];
+		char *rest_pos = override_pos + strlen(CONFIG_CMDLINE_REARRANGE_KEYWORD);
+
+		if (*rest_pos == ' ') {
+			rest_pos ++;
+		}
+
+		override_len = override_pos - cmdline - 1;
+
+		if (override_len > 0) {
+			override_len = min(override_len, 1024);
+			strncpy(tmp, cmdline, override_len);
+			tmp[override_len] = 0;
+			strcpy(cmdline, rest_pos);
+			strlcat(cmdline, " ", COMMAND_LINE_SIZE);
+			strlcat(cmdline, tmp, COMMAND_LINE_SIZE);
+		}
+
+	}
+#endif
 
 	pr_debug("Command line is: %s\n", (char*)data);
 
