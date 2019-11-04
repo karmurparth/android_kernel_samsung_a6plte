@@ -113,7 +113,7 @@
 /* ID for Microsoft MTP OS String */
 #define MTPG_OS_STRING_ID   0xEE
 
-#define DRIVER_NAME		 "usb_mtp_gadget"
+#define DRIVER_NAME		 "mtp_usb"
 
 #define MAX_GUID_SIZE	0x28
 static const char mtpg_longname[] =	"mtp";
